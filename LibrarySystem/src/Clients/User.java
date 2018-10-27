@@ -5,11 +5,13 @@ public class User {
     private String userName;
     private String userPasswd;
     private String userRole;
+    private int userborrownum;
+    private double userbalance;
 
     User() {
         userName = null;
         userPasswd = null;
-        setUserRole(null);
+        userRole = null;
     }
 
     User(String name, String passwd, String role) {
@@ -42,4 +44,24 @@ public class User {
         this.userRole = userRole;
     }
 
+    public void modifyPasswd(){
+        
+    }
+
+    public int getUserborrownum() {
+        return userborrownum;
+    }
+
+    public void setUserborrownum(int userborrownum) {
+        this.userborrownum = userborrownum;
+    }
+
+    public double getUserbalance() {
+        return userbalance;
+    }
+
+    public void setUserbalance(double userbalance) {
+        this.userbalance = userbalance;
+    }
+    
 }

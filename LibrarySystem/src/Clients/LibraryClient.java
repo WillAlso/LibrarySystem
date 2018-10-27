@@ -19,8 +19,10 @@ public class LibraryClient implements ActionListener {
 
     private JFrame loginFrame;
     private JFrame mainFrame;
+    private JFrame subFrame;
     JDesktopPane desktopPane;
     JDesktopPane mainPane;
+    JDesktopPane subPane;
     Dimension screenSize;
     JLabel jb_user;
     JLabel jb_passwd;
