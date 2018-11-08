@@ -48,6 +48,7 @@ public class LibraryClient implements ActionListener {
     JButton btn_queryborrowstate;
     JButton btn_queryuserstate;
     JButton btn_dealbill;
+    User user;
 
     LibraryClient() {
         signUp();
@@ -230,10 +231,33 @@ public class LibraryClient implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == btn_login) {
-            loginFrame.setVisible(false);
-            //OperatorFrame();
-            //AdminFrame();
-            ReaderFrame();
+            String tName = tf_user.getText();
+            String tPass = String.valueOf(tf_passwd.getPassword());
+            if(tName == null || tPass == null || tName.equals("") || tPass.equals("")){
+                return;
+            }
+            User tUser = new User(tName,tPass," ",0,0);
+            user = tUser.loginuser();
+            if(user != null){
+                System.out.println(user.getUserName() + user.getUserRole()+user.getUserPasswd()+tUser.getUserPasswd());
+            }
+            if(user == null){
+                //return;
+            }else if(tPass.equals(user.getUserPasswd())){
+                System.out.println(user.getUserRole());
+                if(user.getUserRole().equals("SystemAdmin")){
+                    loginFrame.setVisible(false);
+                    AdminFrame();
+                }else if(user.getUserRole().equals("BookAdmin")){
+                    loginFrame.setVisible(false);
+                    OperatorFrame();
+                }else{
+                    loginFrame.setVisible(false);
+                    ReaderFrame();
+                }
+            }else{
+                tf_passwd.setText("");
+            }
         }else if(ae.getSource() == btn_cancel){
             System.exit(0);
         }else if(ae.getSource() == btn_modifypasswd){
@@ -245,7 +269,8 @@ public class LibraryClient implements ActionListener {
         }else if(ae.getSource() == btn_deleteuser){
             System.exit(0);
         }else if(ae.getSource() == btn_queryuser){
-            System.exit(0);
+            Admin admin = new Admin("Root","das","asd");
+            admin.queryUser(admin);
         }else if(ae.getSource() == btn_messagebox){
             System.exit(0);
         }else if(ae.getSource() == btn_reservation){

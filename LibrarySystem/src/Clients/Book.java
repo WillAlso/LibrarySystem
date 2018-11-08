@@ -1,8 +1,9 @@
 package Clients;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Book {
+public class Book implements Serializable{
     private String book_author;
     private String book_name;
     private String book_code;
@@ -27,6 +28,7 @@ public class Book {
         book_type = null;
         book_borrowednum = 0;
         book_totalnum = 0;
+        
     }
 
     Book(String author, String name, String code, String isbn, String press, Date publishdate, String version,
