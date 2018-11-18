@@ -9,9 +9,8 @@ import java.io.Serializable;
 import java.net.Socket;
 
 public class User implements Serializable{
-    
     static String SERVER_IP = "127.0.0.1";
-    static int SERVER_PORT = 2017;
+    static int SERVER_PORT = 2018;
     static Socket client;
     static DataOutputStream dos;    //send data to server
     static DataInputStream dis;     //accept data
@@ -20,7 +19,6 @@ public class User implements Serializable{
     private String userRole;
     private int userborrownum;
     private double userbalance;
-
     static ObjectInputStream ois;
     static ObjectOutputStream oos;
     User() {
@@ -48,23 +46,55 @@ public class User implements Serializable{
             dos.flush();
             dos.writeUTF(sql);
             dos.flush();
-            //dos.close();
             dis = new DataInputStream(client.getInputStream());
             boolean flag = dis.readBoolean();
-            //dis.close();
             if(flag == false){
+                dos.close();
+                dis.close();
+                client.close();
                 return null;
             }
             User user1 = new User();
             ois = new ObjectInputStream(client.getInputStream());
             user1 = (User) ois.readObject();
             System.out.println(user1.getUserPasswd());
+            dis.close();
+            dos.close();
             ois.close();
             client.close();
             return user1;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+    
+    public boolean changePassword(User user){
+        try {
+            client = new Socket("127.0.0.1", 2018);
+            dos = new DataOutputStream(client.getOutputStream());
+            String sql =
+                    "UPDATE libraryuser set Password = '" + user.getUserPasswd() + "' WHERE name='" + user.getUserName() + "';";
+            dos.writeInt(5);
+            dos.flush();
+            dos.writeUTF(sql);
+            dos.flush();
+            dis = new DataInputStream(client.getInputStream());
+            boolean flag = dis.readBoolean();
+            if (flag == false) {
+                dos.close();
+                dis.close();
+                client.close();
+                return false;
+            }
+            dos.close();
+            dis.close();
+            ois.close();
+            client.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
