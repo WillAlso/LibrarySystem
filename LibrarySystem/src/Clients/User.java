@@ -21,7 +21,8 @@ public class User implements Serializable{
     private double userbalance;
     static ObjectInputStream ois;
     static ObjectOutputStream oos;
-    User() {
+    
+    public User() {
         userName = null;
         userPasswd = null;
         userRole = null;

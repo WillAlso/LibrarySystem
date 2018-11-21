@@ -7,6 +7,10 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -17,6 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.border.EtchedBorder;
@@ -61,7 +67,19 @@ public class LibraryClient implements ActionListener {
     JLabel t4;
     JLabel tLabel;
     JLabel t5;
+
+    JLabel t6;
+    JLabel t7;
+    JLabel t8;
+    JLabel t9;
+    JLabel t10;
+    JLabel t11;
+    JLabel t12;
+    JLabel t13;
+    JTable borrowstate;
     User user;
+    Book old;
+    Book book;
 
     LibraryClient() {
         signUp();
@@ -205,6 +223,7 @@ public class LibraryClient implements ActionListener {
             btn_borrowbook.addActionListener(this);
             btn_returnbook.addActionListener(this);
             btn_dealbill.addActionListener(this);
+            btn_queryuser.addActionListener(this);
         } else {
             btn_modifypasswd.addActionListener(this);
             btn_messagebox.addActionListener(this);
@@ -616,7 +635,7 @@ public class LibraryClient implements ActionListener {
             }
             ListModel model = new DefaultComboBoxModel(v);
             JList messList = new JList(model);
-            messList.setBorder(new EtchedBorder(EtchedBorder.LOWERED,null,null));
+            messList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
             subPane.add(messList);
             messList.setBounds(20, 20, 360, 200);
             subFrame.setVisible(true);
@@ -648,7 +667,20 @@ public class LibraryClient implements ActionListener {
             tcancel.setBounds(205, 135, 65, 25);
             subFrame.setVisible(true);
             confirm.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
+                public void actionPerformed(ActionEvent e) {
+                    Reader reader = new Reader(user.getUserName(), "", "");
+                    Book book = new Book(bookField.getText(), isbnField.getText());
+                    boolean flag = reader.reserveBook(book);
+                    JLabel tLabel;
+                    if (flag) {
+                        tLabel = new JLabel("预订成功");
+                    } else {
+                        tLabel = new JLabel("预订失败");
+                    }
+                    subPane.add(tLabel);
+                    tLabel.setBounds(165, 110, 100, 25);
+                    subFrame.validate();
+                }
             });
             tcancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -684,7 +716,20 @@ public class LibraryClient implements ActionListener {
             tcancel.setBounds(205, 135, 65, 25);
             subFrame.setVisible(true);
             confirm.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
+                public void actionPerformed(ActionEvent e) {
+                    Reader reader = new Reader(user.getUserName(), "", "");
+                    Book book = new Book(bookField.getText(), isbnField.getText());
+                    boolean flag = reader.unreserveBook(book);
+                    JLabel tLabel;
+                    if (flag) {
+                        tLabel = new JLabel("取消成功");
+                    } else {
+                        tLabel = new JLabel("取消失败");
+                    }
+                    subPane.add(tLabel);
+                    tLabel.setBounds(165, 110, 100, 25);
+                    subFrame.validate();
+                }
             });
             tcancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -699,37 +744,70 @@ public class LibraryClient implements ActionListener {
             subFrame.setLocation(screenSize.width / 2 - 400 / 2, screenSize.height / 2 - 300 / 2);
             subFrame.setResizable(false);
             subFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            subFrame.setSize(400, 300);
+            subFrame.setSize(400, 350);
             JLabel bookLabel = new JLabel("书名");
-            JLabel isbnLabel = new JLabel("ISBN");
             JTextField bookField = new JTextField();
-            JTextField isbnField = new JTextField();
             subPane.add(bookLabel);
-            subPane.add(isbnLabel);
             subPane.add(bookField);
-            subPane.add(isbnField);
-            bookLabel.setBounds(60, 30, 70, 25);
-            bookField.setBounds(120, 30, 180, 25);
-            isbnLabel.setBounds(60, 80, 70, 25);
-            isbnField.setBounds(120, 80, 180, 25);
+            bookLabel.setBounds(30, 30, 70, 25);
+            bookField.setBounds(90, 30, 180, 25);
             JButton confirm = new JButton("确定");
-            JButton tcancel = new JButton("取消");
             subPane.add(confirm);
-            subPane.add(tcancel);
-            confirm.setBounds(110, 135, 65, 25);
-            tcancel.setBounds(205, 135, 65, 25);
+            confirm.setBounds(280, 30, 65, 25);
+            t6 = new JLabel();
+            t7 = new JLabel();
+            t8 = new JLabel();
+            t9 = new JLabel();
+            t10 = new JLabel();
+            t11 = new JLabel();
+            t12 = new JLabel();
+            t13 = new JLabel();
+            subPane.add(t6);
+            subPane.add(t7);
+            subPane.add(t8);
+            subPane.add(t9);
+            subPane.add(t10);
+            subPane.add(t11);
+            subPane.add(t12);
+            subPane.add(t13);
+            t6.setBounds(50, 60, 200, 25);
+            t7.setBounds(50, 90, 200, 25);
+            t8.setBounds(50, 120, 200, 25);
+            t9.setBounds(50, 150, 200, 25);
+            t10.setBounds(50, 180, 200, 25);
+            t11.setBounds(50, 210, 200, 25);
+            t12.setBounds(50, 240, 200, 25);
+            t13.setBounds(50, 270, 200, 25);
             subFrame.setVisible(true);
             confirm.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
-            });
-            tcancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    subFrame.dispose();
-                    subFrame.setVisible(false);
+                    Book t = new Book(bookField.getText(), "");
+                    Reader reader = new Reader(user.getUserName(), "", "");
+                    Book book = reader.queryBook(t);
+                    if (book != null) {
+                        t6.setText("书    籍: " + book.getBookname());
+                        t7.setText("  ISBN: " + book.getBookisbn());
+                        t8.setText("索书码: " + book.getBookcode());
+                        t9.setText("作    者: " + book.getBookauthor());
+                        t10.setText("描    述: " + book.getBookdescribe());
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                        t11.setText("日    期: " + formatter.format(book.getBookpublishdate()));
+                        t12.setText("版    本: " + String.valueOf(book.getBookversion()));
+                        t13.setText("数    量: " + String.valueOf(book.getBooktotalnum()));
+                    } else {
+                        t6.setText("没有查询到图书信息");
+                        t7.setText("");
+                        t8.setText("");
+                        t9.setText("");
+                        t10.setText("");
+                        t11.setText("");
+                        t12.setText("");
+                        t13.setText("");
+                    }
                 }
             });
         } else if (ae.getSource() == btn_addbook) {
-            subFrame = new JFrame("修改用户");
+            subFrame = new JFrame("增加书籍");
             subPane = new JDesktopPane();
             subFrame.getContentPane().add(subPane, BorderLayout.CENTER);
             subFrame.setLocation(screenSize.width / 2 - 400 / 2, screenSize.height / 2 - 300 / 2);
@@ -804,7 +882,38 @@ public class LibraryClient implements ActionListener {
             tcancel.setBounds(205, 330, 65, 25);
             subFrame.setVisible(true);
             confirm.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
+                public void actionPerformed(ActionEvent e) {
+                    Book book = new Book();
+                    boolean flag;
+                    try {
+                        book.setBookauthor(authorField.getText());
+                        book.setBookname(bookField.getText());
+                        book.setBookcode(codeField.getText());
+                        book.setBookisbn(isbnField.getText());
+                        book.setBookdescribe(descField.getText());
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                        book.setBookpublishdate(sdf.parse(dateField.getText()));
+                        book.setTempdate(dateField.getText());
+                        book.setBookversion(Integer.valueOf(versionField.getText()));
+                        book.setBookprice(Double.valueOf(priceField.getText()));
+                        book.setBooktype(typeField.getText());
+                        book.setBookborrowednum(0);
+                        book.setBooktotalnum(Integer.valueOf(totalField.getText()));
+                    } catch (Exception e1) {
+                        flag = false;
+                    }
+                    Operator operator = new Operator(user.getUserName(), "", "");
+                    flag = operator.addBook(book);
+                    JLabel tLabel;
+                    if (flag) {
+                        tLabel = new JLabel("添加成功");
+                    } else {
+                        tLabel = new JLabel("添加失败");
+                    }
+                    subPane.add(tLabel);
+                    tLabel.setBounds(310, 90, 100, 25);
+                    subFrame.validate();
+                }
             });
             tcancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -840,7 +949,21 @@ public class LibraryClient implements ActionListener {
             tcancel.setBounds(205, 135, 65, 25);
             subFrame.setVisible(true);
             confirm.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
+                public void actionPerformed(ActionEvent e) {
+                    Operator operator = new Operator(user.getUserName(), "", "");
+                    String book = bookField.getText();
+                    String isbn = isbnField.getText();
+                    boolean flag = operator.deleteBook(book, isbn);
+                    JLabel tLabel;
+                    if (flag) {
+                        tLabel = new JLabel("删除成功");
+                    } else {
+                        tLabel = new JLabel("删除失败");
+                    }
+                    subPane.add(tLabel);
+                    tLabel.setBounds(165, 110, 100, 25);
+                    subFrame.validate();
+                }
             });
             tcancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -849,7 +972,7 @@ public class LibraryClient implements ActionListener {
                 }
             });
         } else if (ae.getSource() == btn_modifybook) {
-            subFrame = new JFrame("修改用户");
+            subFrame = new JFrame("修改书籍");
             subPane = new JDesktopPane();
             subFrame.getContentPane().add(subPane, BorderLayout.CENTER);
             subFrame.setLocation(screenSize.width / 2 - 400 / 2, screenSize.height / 2 - 300 / 2);
@@ -923,8 +1046,39 @@ public class LibraryClient implements ActionListener {
             confirm.setBounds(110, 330, 65, 25);
             tcancel.setBounds(205, 330, 65, 25);
             subFrame.setVisible(true);
+            old = new Book();
+            book = new Book();
             confirm.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
+                public void actionPerformed(ActionEvent e) {
+                    book.setBookauthor(authorField.getText());
+                    book.setBookname(bookField.getText());
+                    book.setBookcode(codeField.getText());
+                    book.setBookisbn(isbnField.getText());
+                    book.setBookdescribe(descField.getText());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                    try {
+                        book.setBookpublishdate(sdf.parse(dateField.getText()));
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                    }
+                    book.setTempdate(dateField.getText());
+                    book.setBookversion(Integer.valueOf(versionField.getText()));
+                    book.setBookprice(Double.valueOf(priceField.getText()));
+                    book.setBooktype(typeField.getText());
+                    book.setBookborrowednum(0);
+                    book.setBooktotalnum(Integer.valueOf(totalField.getText()));
+                    Operator operator = new Operator(user.getUserName(), "", "");
+                    boolean flag = operator.modifyBook(old, book);
+                    JLabel tLabel;
+                    if (flag) {
+                        tLabel = new JLabel("修改成功");
+                    } else {
+                        tLabel = new JLabel("修改失败");
+                    }
+                    subPane.add(tLabel);
+                    tLabel.setBounds(310, 90, 100, 25);
+                    subFrame.validate();
+                }
             });
             tcancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -936,7 +1090,23 @@ public class LibraryClient implements ActionListener {
             subPane.add(search);
             search.setBounds(310, 50, 65, 25);
             search.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
+                public void actionPerformed(ActionEvent e) {
+                    old.setBookname(bookField.getText());
+                    old.setBookisbn(isbnField.getText());
+                    Reader reader = new Reader();
+                    old = reader.queryBook(old);
+                    bookField.setText(old.getBookname());
+                    isbnField.setText(old.getBookisbn());
+                    codeField.setText(old.getBookcode());
+                    authorField.setText(old.getBookauthor());
+                    typeField.setText(old.getBooktype());
+                    descField.setText(old.getBookdescribe());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                    dateField.setText(sdf.format(old.getBookpublishdate()));
+                    versionField.setText(String.valueOf(old.getBookversion()));
+                    priceField.setText(String.valueOf(old.getBookprice()));
+                    totalField.setText(String.valueOf(old.getBooktotalnum()));
+                }
             });
         } else if (ae.getSource() == btn_borrowbook) {
             subFrame = new JFrame("借阅图书");
@@ -972,7 +1142,22 @@ public class LibraryClient implements ActionListener {
             tcancel.setBounds(205, 145, 65, 25);
             subFrame.setVisible(true);
             confirm.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
+                public void actionPerformed(ActionEvent e) {
+                    String book = bookField.getText();
+                    String isbn = isbnField.getText();
+                    String name = readerField.getText();
+                    Operator operator = new Operator(user.getUserName(), "", "");
+                    boolean flag = operator.borrowBook(name, book, isbn);
+                    JLabel tLabel;
+                    if (flag) {
+                        tLabel = new JLabel("借阅成功");
+                    } else {
+                        tLabel = new JLabel("借阅失败");
+                    }
+                    subPane.add(tLabel);
+                    tLabel.setBounds(165, 125, 100, 25);
+                    subFrame.validate();
+                }
             });
             tcancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1014,7 +1199,22 @@ public class LibraryClient implements ActionListener {
             tcancel.setBounds(205, 145, 65, 25);
             subFrame.setVisible(true);
             confirm.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
+                public void actionPerformed(ActionEvent e) {
+                    String book = bookField.getText();
+                    String isbn = isbnField.getText();
+                    String name = readerField.getText();
+                    Operator operator = new Operator(user.getUserName(), "", "");
+                    boolean flag = operator.returnBook(name, book, isbn);
+                    JLabel tLabel;
+                    if (flag) {
+                        tLabel = new JLabel("归还成功");
+                    } else {
+                        tLabel = new JLabel("归还失败");
+                    }
+                    subPane.add(tLabel);
+                    tLabel.setBounds(165, 125, 100, 25);
+                    subFrame.validate();
+                }
             });
             tcancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1056,7 +1256,21 @@ public class LibraryClient implements ActionListener {
             tcancel.setBounds(205, 145, 65, 25);
             subFrame.setVisible(true);
             confirm.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
+                public void actionPerformed(ActionEvent e) {
+                    Reader reader = new Reader(user.getUserName(), "", "");
+                    boolean flag =
+                            reader.recommendBook(bookField.getText(), isbnField.getText(),
+                                    contactField.getText());
+                    JLabel tLabel;
+                    if (flag) {
+                        tLabel = new JLabel("推荐成功");
+                    } else {
+                        tLabel = new JLabel("推荐失败");
+                    }
+                    subPane.add(tLabel);
+                    tLabel.setBounds(165, 125, 100, 25);
+                    subFrame.validate();
+                }
             });
             tcancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1065,22 +1279,54 @@ public class LibraryClient implements ActionListener {
                 }
             });
         } else if (ae.getSource() == btn_queryborrowstate) {
-            subFrame = new JFrame("修改用户");
+            subFrame = new JFrame("用户借书状态");
             subPane = new JDesktopPane();
             subFrame.getContentPane().add(subPane, BorderLayout.CENTER);
             subFrame.setLocation(screenSize.width / 2 - 400 / 2, screenSize.height / 2 - 300 / 2);
             subFrame.setResizable(false);
             subFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             subFrame.setSize(400, 300);
+            Reader reader = new Reader(user.getUserName(), "", "");
+            Operation[] op = reader.queryBorrowState(reader);
+            int len = op.length;
+            String[] column = {"用户", "书名", "ISBN", "借阅时间", "归还时间"};
+            Object[][] data = new Object[op.length][5];
+            for (int i = 0; i < op.length; i++) {
+                data[i][0] = op[i].getUsername();
+                data[i][1] = op[i].getBookname();
+                data[i][2] = op[i].getIsbn();
+                data[i][3] = op[i].getBorrowdate();
+                data[i][4] = op[i].getDuedate();
+            }
+            borrowstate = new JTable(data, column);
+            borrowstate.setBounds(20, 20, 360, op.length * 25);
+            JScrollPane scrollPane = new JScrollPane(borrowstate);
+            scrollPane.getViewport().setBackground(Color.WHITE);
+            scrollPane.setBounds(0, 0, 400, 300);
+            subPane.add(scrollPane);
             subFrame.setVisible(true);
         } else if (ae.getSource() == btn_queryuserstate) {
-            subFrame = new JFrame("修改用户");
+            subFrame = new JFrame("用户状态");
             subPane = new JDesktopPane();
             subFrame.getContentPane().add(subPane, BorderLayout.CENTER);
             subFrame.setLocation(screenSize.width / 2 - 400 / 2, screenSize.height / 2 - 300 / 2);
             subFrame.setResizable(false);
             subFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             subFrame.setSize(400, 300);
+            Reader reader = new Reader(user.getUserName(), "", "");
+            User t = reader.queryUserState(reader);
+            JLabel lt1 = new JLabel("用        户: " + t.getUserName());
+            JLabel lt2 = new JLabel("身        份: " + t.getUserRole());
+            JLabel lt3 = new JLabel("余        额: " + String.valueOf(t.getUserbalance()) + " 元");
+            JLabel lt4 = new JLabel("借书数量: " + String.valueOf(t.getUserborrownum()) + " 本");
+            subPane.add(lt1);
+            subPane.add(lt2);
+            subPane.add(lt3);
+            subPane.add(lt4);
+            lt1.setBounds(60, 30, lt1.getText().length() * 25, 25);
+            lt2.setBounds(60, 60, lt2.getText().length() * 25, 25);
+            lt3.setBounds(60, 90, lt3.getText().length() * 25, 25);
+            lt4.setBounds(60, 120, lt4.getText().length() * 25, 25);
             subFrame.setVisible(true);
         } else if (ae.getSource() == btn_dealbill) {
             subFrame = new JFrame("处理赔偿");
@@ -1116,7 +1362,22 @@ public class LibraryClient implements ActionListener {
             tcancel.setBounds(205, 145, 65, 25);
             subFrame.setVisible(true);
             confirm.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {}
+                public void actionPerformed(ActionEvent e) {
+                    String name = bookField.getText();
+                    String tuser = readField.getText();
+                    Double bill = Double.valueOf(billField.getText());
+                    Operator operator = new Operator(user.getUserName(), "", "");
+                    boolean flag = operator.dealBill(tuser, bill);
+                    JLabel tLabel;
+                    if (flag) {
+                        tLabel = new JLabel("处理成功");
+                    } else {
+                        tLabel = new JLabel("处理失败");
+                    }
+                    subPane.add(tLabel);
+                    tLabel.setBounds(165, 120, 100, 25);
+                    subFrame.validate();
+                }
             });
             tcancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {

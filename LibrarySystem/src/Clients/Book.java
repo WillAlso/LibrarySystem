@@ -10,20 +10,23 @@ public class Book implements Serializable{
     private String book_isbn;
     private String book_press;
     private Date book_publishdate;
-    private String book_version;
+    private int book_version;
     private double book_price;
     private String book_type;
     private int book_borrowednum;
     private int book_totalnum;
+    private String book_describe;
+    private String tempdate;
+    
 
-    Book() {
+    public Book() {
         book_author = null;
         book_name = null;
         book_code = null;
         book_isbn = null;
         book_press = null;
         book_publishdate = null;
-        book_version = null;
+        book_version = 0;
         book_price = 0.0;
         book_type = null;
         book_borrowednum = 0;
@@ -31,12 +34,13 @@ public class Book implements Serializable{
         
     }
 
-    Book(String author, String name, String code, String isbn, String press, Date publishdate, String version,
+    public Book(String author, String name, String code, String isbn,String desc, String press, Date publishdate, int version,
             double price, String type, int borrowednum, int totalnum) {
         setBookauthor(author);
         setBookname(name);
         setBookcode(code);
         setBookisbn(isbn);
+        setBookdescribe(desc);
         setBookpress(press);
         setBookpublishdate(publishdate);
         setBookversion(version);
@@ -44,6 +48,11 @@ public class Book implements Serializable{
         setBooktype(type);
         setBookborrowednum(borrowednum);
         setBooktotalnum(totalnum);
+    }
+    
+    public Book(String name,String isbn){
+        setBookname(name);
+        setBookisbn(isbn);
     }
 
     public String getBookauthor() {
@@ -86,12 +95,12 @@ public class Book implements Serializable{
         this.book_publishdate = book_publishdate;
     }
 
-    public String getBookversion() {
+    public int getBookversion() {
         return book_version;
     }
 
-    public void setBookversion(String book_version) {
-        this.book_version = book_version;
+    public void setBookversion(int version) {
+        this.book_version = version;
     }
 
     public double getBookprice() {
@@ -132,5 +141,21 @@ public class Book implements Serializable{
 
     public void setBookcode(String book_code) {
         this.book_code = book_code;
+    }
+
+    public String getBookdescribe() {
+        return book_describe;
+    }
+
+    public void setBookdescribe(String book_describe) {
+        this.book_describe = book_describe;
+    }
+
+    public String getTempdate() {
+        return tempdate;
+    }
+
+    public void setTempdate(String tempdate) {
+        this.tempdate = tempdate;
     }
 }
