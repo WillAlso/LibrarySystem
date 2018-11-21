@@ -3,23 +3,21 @@ package Clients;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataInputStream;
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -33,62 +31,61 @@ public class LibraryClient implements ActionListener {
     private JFrame loginFrame;
     private JFrame mainFrame;
     private JFrame subFrame;
-    JDesktopPane desktopPane;
-    JDesktopPane mainPane;
-    JDesktopPane subPane;
-    Dimension screenSize;
-    JLabel jb_user;
-    JLabel jb_passwd;
-    JButton btn_login;
-    JButton btn_cancel;
-    JTextField tf_user;
-    JPasswordField tf_passwd;
-    JButton btn_modifypasswd;
-    JButton btn_adduser;
-    JButton btn_modifyuser;
-    JButton btn_deleteuser;
-    JButton btn_queryuser;
-    JButton btn_messagebox;
-    JButton btn_reservation;
-    JButton btn_unreservation;
-    JButton btn_querybook;
-    JButton btn_addbook;
-    JButton btn_deletebook;
-    JButton btn_modifybook;
-    JButton btn_borrowbook;
-    JButton btn_returnbook;
-    JButton btn_recommend;
-    JButton btn_queryborrowstate;
-    JButton btn_queryuserstate;
-    JButton btn_dealbill;
-    JLabel t1;
-    JLabel t2;
-    JLabel t3;
-    JLabel t4;
-    JLabel tLabel;
-    JLabel t5;
-
-    JLabel t6;
-    JLabel t7;
-    JLabel t8;
-    JLabel t9;
-    JLabel t10;
-    JLabel t11;
-    JLabel t12;
-    JLabel t13;
-    JTable borrowstate;
-    User user;
-    Book old;
-    Book book;
+    private JDesktopPane desktopPane;
+    private JDesktopPane mainPane;
+    private JDesktopPane subPane;
+    private Dimension screenSize;
+    private JLabel jb_user;
+    private JLabel jb_passwd;
+    private JButton btn_login;
+    private JButton btn_cancel;
+    private JTextField tf_user;
+    private JPasswordField tf_passwd;
+    private JButton btn_modifypasswd;
+    private JButton btn_adduser;
+    private JButton btn_modifyuser;
+    private JButton btn_deleteuser;
+    private JButton btn_queryuser;
+    private JButton btn_messagebox;
+    private JButton btn_reservation;
+    private JButton btn_unreservation;
+    private JButton btn_querybook;
+    private JButton btn_addbook;
+    private JButton btn_deletebook;
+    private JButton btn_modifybook;
+    private JButton btn_borrowbook;
+    private JButton btn_returnbook;
+    private JButton btn_recommend;
+    private JButton btn_queryborrowstate;
+    private JButton btn_queryuserstate;
+    private JButton btn_dealbill;
+    private JLabel userhead;
+    private JLabel usernameLabel;
+    private JLabel userdateLabel;
+    private JLabel userroleLabel;
+    private JLabel t1;
+    private JLabel t2;
+    private JLabel t3;
+    private JLabel t4;
+    private JLabel tLabel;
+    private JLabel t5;
+    private JLabel t6;
+    private JLabel t7;
+    private JLabel t8;
+    private JLabel t9;
+    private JLabel t10;
+    private JLabel t11;
+    private JLabel t12;
+    private JLabel t13;
+    private JTable borrowstate;
+    private User user;
+    private Book old;
+    private Book book;
 
     LibraryClient() {
         signUp();
     }
-
-    private void InitElement() {
-
-    }
-
+    
     private void InitLocation(int choice) {
         if (choice == 0) {
             loginFrame = new JFrame("Library System");
@@ -100,12 +97,16 @@ public class LibraryClient implements ActionListener {
             btn_cancel = new JButton("取消");
             tf_user = new JTextField(15);
             tf_passwd = new JPasswordField(15);
+            userhead = new JLabel();
+            ImageIcon icon_head = new ImageIcon(".\\picture\\user.png");
+            userhead = new JLabel(icon_head); 
             jb_user.setBounds(100, 70, 40, 25);
             jb_passwd.setBounds(100, 110, 40, 25);
             tf_user.setBounds(145, 70, 140, 25);
             tf_passwd.setBounds(145, 110, 140, 25);
             btn_login.setBounds(115, 155, 70, 25);
             btn_cancel.setBounds(210, 155, 70, 25);
+            userhead.setBounds(25, 25, 100, 100);
             desktopPane.add(jb_user);
             desktopPane.add(jb_passwd);
             desktopPane.add(btn_login);
@@ -127,22 +128,36 @@ public class LibraryClient implements ActionListener {
             mainFrame.setSize(900, 600);
             mainFrame.setLocation(screenSize.width / 2 - mainFrame.getWidth() / 2,
                     screenSize.height / 2 - mainFrame.getHeight() / 2);
+            int wid = mainFrame.getWidth() - 150;
             btn_modifypasswd = new JButton("修改密码");
-            btn_modifypasswd.setBounds(130, 0, 120, 35);
+            btn_modifypasswd.setBounds(wid, 20, 120, 35);
+            usernameLabel = new JLabel("用户  " + user.getUserName());
+            userroleLabel = new JLabel("角色  " + user.getUserRole());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String now = new String("时间  " + sdf.format(date));
+            userdateLabel = new JLabel(now);
+            usernameLabel.setBounds(150, 30, usernameLabel.getText().length() * 25, 25);
+            userroleLabel.setBounds(150, 70, usernameLabel.getText().length() * 25, 25);
+            userdateLabel.setBounds(150, 110, usernameLabel.getText().length() * 25, 25);
             mainPane.add(btn_modifypasswd);
+            mainPane.add(usernameLabel);
+            mainPane.add(userroleLabel);
+            mainPane.add(userdateLabel);
             if (choice == 1) {
                 btn_adduser = new JButton("增加用户");
                 btn_deleteuser = new JButton("删除用户");
                 btn_modifyuser = new JButton("修改用户");
                 btn_queryuser = new JButton("查询用户");
-                btn_adduser.setBounds(0, 0, 120, 35);
-                btn_deleteuser.setBounds(0, 40, 120, 35);
-                btn_modifyuser.setBounds(0, 80, 120, 35);
-                btn_queryuser.setBounds(0, 120, 120, 35);
+                btn_adduser.setBounds(wid, 60, 120, 35);
+                btn_deleteuser.setBounds(wid, 100, 120, 35);
+                btn_modifyuser.setBounds(wid, 140, 120, 35);
+                btn_queryuser.setBounds(wid, 180, 120, 35);
                 mainPane.add(btn_adduser);
                 mainPane.add(btn_deleteuser);
                 mainPane.add(btn_modifyuser);
                 mainPane.add(btn_queryuser);
+                mainPane.add(userhead);
             } else {
                 if (choice == 2) {
                     btn_messagebox = new JButton("消息");
@@ -155,16 +170,16 @@ public class LibraryClient implements ActionListener {
                     btn_unreservation = new JButton("取消预订");
                     btn_dealbill = new JButton("处理赔偿");
                     btn_queryuser = new JButton("查询账户");
-                    btn_messagebox.setBounds(0, 0, 120, 35);
-                    btn_borrowbook.setBounds(0, 40, 120, 35);
-                    btn_returnbook.setBounds(0, 80, 120, 35);
-                    btn_querybook.setBounds(0, 120, 120, 35);
-                    btn_addbook.setBounds(0, 160, 120, 35);
-                    btn_deletebook.setBounds(0, 200, 120, 35);
-                    btn_modifybook.setBounds(0, 240, 120, 35);
-                    btn_unreservation.setBounds(0, 280, 120, 35);
-                    btn_dealbill.setBounds(0, 320, 120, 35);
-                    btn_queryuser.setBounds(0, 360, 120, 35);
+                    btn_messagebox.setBounds(wid, 60, 120, 35);
+                    btn_borrowbook.setBounds(wid, 100, 120, 35);
+                    btn_returnbook.setBounds(wid, 140, 120, 35);
+                    btn_querybook.setBounds(wid, 180, 120, 35);
+                    btn_addbook.setBounds(wid, 220, 120, 35);
+                    btn_deletebook.setBounds(wid, 260, 120, 35);
+                    btn_modifybook.setBounds(wid, 300, 120, 35);
+                    btn_unreservation.setBounds(wid, 340, 120, 35);
+                    btn_dealbill.setBounds(wid, 380, 120, 35);
+                    btn_queryuser.setBounds(wid, 420, 120, 35);
                     mainPane.add(btn_messagebox);
                     mainPane.add(btn_borrowbook);
                     mainPane.add(btn_returnbook);
@@ -175,6 +190,7 @@ public class LibraryClient implements ActionListener {
                     mainPane.add(btn_unreservation);
                     mainPane.add(btn_dealbill);
                     mainPane.add(btn_queryuser);
+                    mainPane.add(userhead);
                 } else {
                     btn_messagebox = new JButton("消息");
                     btn_reservation = new JButton("预订");
@@ -183,13 +199,13 @@ public class LibraryClient implements ActionListener {
                     btn_recommend = new JButton("推荐图书");
                     btn_queryuserstate = new JButton("查询账户");
                     btn_queryborrowstate = new JButton("查询历史");
-                    btn_messagebox.setBounds(0, 0, 120, 35);
-                    btn_reservation.setBounds(0, 40, 120, 35);
-                    btn_unreservation.setBounds(0, 80, 120, 35);
-                    btn_querybook.setBounds(0, 120, 120, 35);
-                    btn_recommend.setBounds(0, 160, 120, 35);
-                    btn_queryuserstate.setBounds(0, 200, 120, 35);
-                    btn_queryborrowstate.setBounds(0, 240, 120, 35);
+                    btn_messagebox.setBounds(wid, 60, 120, 35);
+                    btn_reservation.setBounds(wid, 100, 120, 35);
+                    btn_unreservation.setBounds(wid, 140, 120, 35);
+                    btn_querybook.setBounds(wid, 180, 120, 35);
+                    btn_recommend.setBounds(wid, 220, 120, 35);
+                    btn_queryuserstate.setBounds(wid, 260, 120, 35);
+                    btn_queryborrowstate.setBounds(wid, 300, 120, 35);
                     mainPane.add(btn_messagebox);
                     mainPane.add(btn_reservation);
                     mainPane.add(btn_unreservation);
@@ -197,6 +213,7 @@ public class LibraryClient implements ActionListener {
                     mainPane.add(btn_recommend);
                     mainPane.add(btn_queryuserstate);
                     mainPane.add(btn_queryborrowstate);
+                    mainPane.add(userhead);
                 }
             }
         }
@@ -271,13 +288,10 @@ public class LibraryClient implements ActionListener {
             User tUser = new User(tName, tPass, " ", 0, 0);
             user = tUser.loginuser();
             if (user != null) {
-                System.out.println(user.getUserName() + user.getUserRole() + user.getUserPasswd()
-                        + tUser.getUserPasswd());
             }
             if (user == null) {
-                // return;
+                return;
             } else if (tPass.equals(user.getUserPasswd())) {
-                System.out.println(user.getUserRole());
                 if (user.getUserRole().equals("SystemAdmin")) {
                     loginFrame.setVisible(false);
                     AdminFrame();
@@ -584,7 +598,6 @@ public class LibraryClient implements ActionListener {
                         Admin admin = new Admin(n, "", "");
                         User u = admin.queryUser(admin);
                         if (u != null) {
-                            // System.out.println(u.getUserName()+u.getUserPasswd()+u.getUserRole());
                             String m1 = "用户名: " + u.getUserName();
                             String m2 = "角   色: " + u.getUserRole();
                             String m3 = "余   额: " + u.getUserbalance() + " 元";
